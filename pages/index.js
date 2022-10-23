@@ -15,7 +15,7 @@ const uiConfig = {
       requireDisplayName: false,
     },
   ],
-  signInSuccessUrl: "/",
+  signInSuccessUrl: "/dashboard",
 };
 
 export default function Home() {

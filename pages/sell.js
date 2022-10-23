@@ -4,7 +4,7 @@ import firebase from "../firebase/clientApp";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
 
-export default function Dashboard() {
+export default function Sell() {
   const [user, loading] = useAuthState(firebase.auth());
   const router = useRouter();
 

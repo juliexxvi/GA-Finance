@@ -1,38 +1,101 @@
-import { Typography, Button, Grid } from "@mui/material";
+import { Typography, Button, Grid, Divider } from "@mui/material";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../firebase/clientApp";
+import { getAuth, signOut } from "firebase/auth";
+import { useRouter } from "next/router";
+
+const auth = getAuth();
 
 export default function Header() {
   const [user] = useAuthState(firebase.auth());
+  const router = useRouter();
+
+  if (!user) {
+    return <></>;
+  }
 
   return (
-    <Grid
-      container
-      justifyContent="space-between"
-      alignItems="center"
-      sx={{ mt: 2 }}
-    >
-      <Grid item>
-        <Typography variant="h4" component="h4" gutterBottom>
-          GA Finance
-        </Typography>
-      </Grid>
-      <Grid item>
-        <Grid item>
-          <Typography variant="body2">{user.email}</Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            //   href={docs}
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ mt: { xs: 2, md: 0 } }}
-            variant="contained"
+    <>
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mt: 2, mb: 2 }}
+      >
+        <Grid item xs="auto">
+          <Typography
+            variant="h4"
+            component="h4"
+            onClick={() => {
+              router.push("/dashboard");
+            }}
+            style={{ cursor: "pointer" }}
           >
-            Log Out
-          </Button>
+            GA Finance
+          </Typography>
+        </Grid>
+        <Grid item xs={6} sx={{ ml: 4 }}>
+          <Grid container alignItems="center">
+            <Button
+              href="/quote"
+              sx={{ mr: 2 }}
+              variant="text"
+              color="primary"
+              size="large"
+              style={{ minWidth: "80px" }}
+            >
+              Quote
+            </Button>
+            <Button
+              href="/buy"
+              sx={{ mr: 2 }}
+              variant="text"
+              color="primary"
+              size="large"
+              style={{ minWidth: "80px" }}
+            >
+              Buy
+            </Button>
+            <Button
+              href="/sell"
+              sx={{ mr: 2 }}
+              variant="text"
+              color="primary"
+              size="large"
+              style={{ minWidth: "80px" }}
+            >
+              Sell
+            </Button>
+            <Button
+              href="/history"
+              sx={{ mr: 2 }}
+              variant="text"
+              color="primary"
+              size="large"
+              style={{ minWidth: "80px" }}
+            >
+              History
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item xs>
+          <Grid container justifyContent="center" alignItems="center">
+            <Typography variant="body2" sx={{ mr: 2 }}>
+              {user.email}
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                signOut(auth);
+                router.push("/");
+              }}
+            >
+              Log Out
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
-    </Grid>
+      <Divider />
+    </>
   );
 }
