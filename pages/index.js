@@ -6,6 +6,8 @@ import StyledFirebaseAuth from "../components/StyledFirebaseAuth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/router";
+import { createNewUserBalance } from "../utils/helpers";
+import { useEffect } from "react";
 
 const uiConfig = {
   signInFlow: "popup",
@@ -15,16 +17,19 @@ const uiConfig = {
       requireDisplayName: false,
     },
   ],
-  signInSuccessUrl: "/dashboard",
+  signInSuccessUrl: "/",
 };
 
 export default function Home() {
   const [user, loading] = useAuthState(firebase.auth());
   const router = useRouter();
 
-  if (user) {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (user) {
+      createNewUserBalance(user.uid);
+      router.push("/dashboard");
+    }
+  }, [user]);
 
   return (
     <div className={styles.container}>

@@ -20,7 +20,7 @@ export default function Quote() {
 
   if (!loading && !user) {
     router.push("/");
-    return;
+    return <></>;
   }
 
   const [symbol, setSymbol] = useState("");

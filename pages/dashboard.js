@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   if (!loading && !user) {
     router.push("/");
-    return;
+    return <></>;
   }
 
   if (loading) {

@@ -10,7 +10,7 @@ export default function Buy() {
 
   if (!loading && !user) {
     router.push("/");
-    return;
+    return <></>;
   }
 
   if (loading) {
