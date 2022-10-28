@@ -11,11 +11,7 @@ const auth = getAuth();
 export default function Header() {
   const [user] = useAuthState(firebase.auth());
   const router = useRouter();
-
-  if (!user) {
-    return <></>;
-  }
-
+  const [balance, setBalance] = useState(null);
   const [userDoc, userDocLoading] = useDocument(
     firebase.firestore().collection("users").doc(user.uid),
     {
@@ -23,13 +19,15 @@ export default function Header() {
     }
   );
 
-  const [balance, setBalance] = useState(null);
-
   useEffect(() => {
     if (userDoc && !userDocLoading && userDoc.data()) {
       setBalance(userDoc.data().balance.toLocaleString());
     }
   }, [userDoc]);
+
+  if (!user) {
+    return <></>;
+  }
 
   return (
     <>

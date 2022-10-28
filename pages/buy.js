@@ -18,14 +18,14 @@ export default function Buy() {
   const [user, loading] = useAuthState(firebase.auth());
   const router = useRouter();
 
+  const [symbol, setSymbol] = useState("");
+  const [quantity, setQuantity] = useState(0);
+  const [message, setMessage] = useState(null);
+
   if (!loading && !user) {
     router.push("/");
     return <></>;
   }
-
-  const [symbol, setSymbol] = useState("");
-  const [quantity, setQuantity] = useState(0);
-  const [message, setMessage] = useState(null);
 
   const handleSymbolChange = (event) => setSymbol(event.target.value);
   const handleQuantityChange = (event) =>
