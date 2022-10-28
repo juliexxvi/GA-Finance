@@ -3,6 +3,8 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../firebase/clientApp";
 import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/router";
+import { useDocument } from "react-firebase-hooks/firestore";
+import { useEffect, useState } from "react";
 
 const auth = getAuth();
 
@@ -13,6 +15,21 @@ export default function Header() {
   if (!user) {
     return <></>;
   }
+
+  const [userDoc, userDocLoading] = useDocument(
+    firebase.firestore().collection("users").doc(user.uid),
+    {
+      snapshotListenOptions: { includeMetadataChanges: true },
+    }
+  );
+
+  const [balance, setBalance] = useState(null);
+
+  useEffect(() => {
+    if (userDoc && !userDocLoading && userDoc.data()) {
+      setBalance(userDoc.data().balance.toLocaleString());
+    }
+  }, [userDoc]);
 
   return (
     <>
@@ -80,14 +97,20 @@ export default function Header() {
         </Grid>
         <Grid item xs>
           <Grid container justifyContent="center" alignItems="center">
-            <Typography variant="body2" sx={{ mr: 2 }}>
-              {user.email}
-            </Typography>
+            <Grid item>
+              <Typography variant="body2" sx={{ mr: 2 }}>
+                {user.email}
+              </Typography>
+              {balance && (
+                <Typography variant="body2" sx={{ mr: 2 }}>
+                  Balance: ${balance}
+                </Typography>
+              )}
+            </Grid>
             <Button
               variant="contained"
               onClick={() => {
-                signOut(auth);
-                router.push("/");
+                signOut(auth).then(() => router.push("/"));
               }}
             >
               Log Out

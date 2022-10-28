@@ -10,7 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../firebase/clientApp";
 import Header from "../components/Header";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { lookup } from "../utils/helpers";
 import Disclaimer from "../components/Disclaimer";
 
@@ -18,18 +18,26 @@ export default function Quote() {
   const [user, loading] = useAuthState(firebase.auth());
   const router = useRouter();
 
+  const [symbol, setSymbol] = useState("");
+  const [message, setMessage] = useState(null);
+
+  const handleChange = (event) => setSymbol(event.target.value);
+  const getData = () => {
+    if (symbol.trim() !== "") {
+      lookup(symbol.trim()).then((data) =>
+        setMessage(
+          data
+            ? `A share of ${data.name} (${data.symbol}) costs $${data.price}`
+            : `Symbol ${symbol} does not exist!`
+        )
+      );
+    }
+  };
+
   if (!loading && !user) {
     router.push("/");
     return <></>;
   }
-
-  const [symbol, setSymbol] = useState("");
-  const [symbolData, setSymbolData] = useState(null);
-
-  const handleChange = (event) => setSymbol(event.target.value);
-  const getData = () => {
-    lookup(symbol).then((data) => setSymbolData(data));
-  };
 
   if (loading) {
     return (
@@ -55,12 +63,9 @@ export default function Quote() {
         alignItems="center"
         sx={{ mt: 6 }}
       >
-        {symbolData ? (
+        {message ? (
           <>
-            <Typography variant="h5">
-              A share of {symbolData.name} ({symbolData.symbol}) costs $
-              {symbolData.price}
-            </Typography>
+            <Typography variant="h5">{message}</Typography>
           </>
         ) : (
           <>
