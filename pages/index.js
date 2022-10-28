@@ -16,6 +16,18 @@ const uiConfig = {
       provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
       requireDisplayName: false,
     },
+    {
+      provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+      requireDisplayName: false,
+    },
+    {
+      provider: firebase.auth.GithubAuthProvider.PROVIDER_ID,
+      requireDisplayName: false,
+    },
+    {
+      provider: firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+      requireDisplayName: false,
+    },
   ],
   signInSuccessUrl: "/",
 };

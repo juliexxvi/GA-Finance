@@ -69,7 +69,7 @@ export const sell = async (symbol, quantity, uid) => {
   const user = await userDoc.get();
   const currentBalance = user.data().balance;
 
-  // Able to buy, update holding first
+  // Check holding
   const holdingDoc = firebase.firestore().collection("holdings").doc(uid);
   const holding = await holdingDoc.get();
   const currentSymbolHolding = holding.data()[symbolData.symbol];
@@ -130,7 +130,7 @@ export const getHoldings = async (uid) => {
     .get();
 
   const data = snapshot.data();
-  const keys = Object.keys(data);
+  const keys = data ? Object.keys(data) : [];
   const result = {};
   for (const key of keys) {
     if (data[key] && data[key] > 0) {
